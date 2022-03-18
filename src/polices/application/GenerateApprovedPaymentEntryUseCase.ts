@@ -1,6 +1,6 @@
 import Entry from "../domain/entry";
 import { FIGA_FEE } from "../domain/fee";
-import { CASH, EMPA_FEE_PAYABLE, FEE_REVENUE, FIGA_FEE_RECEIVABLE, INSPECTION_FEES, PREMIUMS_RECEIVED_IN_ADVANCED, PREMIUM_RECEIVABLE, PROGRAM_ADMINISTRATOR_FEE_REVENUE, REFUNS_PAYABLE, UNASSIGNED_SURPLUS } from "../domain/ladger";
+import { CASH, EMPA_FEE_PAYABLE, FEE_REVENUE, FIGA_FEE_RECEIVABLE, INSPECTION_FEES, PREMIUMS_RECEIVED_IN_ADVANCED, PREMIUM_RECEIVABLE, PROGRAM_ADMINISTRATOR_FEE_REVENUE, REFUNS_PAYABLE, STATE_TAX_RECEIVABLE, UNASSIGNED_SURPLUS } from "../domain/ladger";
 import Policy from "../domain/policy";
 import { ApprovedPayment } from "../domain/policy_event";
 
@@ -30,6 +30,7 @@ export default class GenerateApprovedPaymentEntryUseCase {
             [INSPECTION_FEES, policy.billingInspectionFee(event.installmentIndex())],
             [PROGRAM_ADMINISTRATOR_FEE_REVENUE, policy.billingAdminFee(event.installmentIndex())],
             [FIGA_FEE_RECEIVABLE, policy.billingFigaFee(event.installmentIndex())],
+            [STATE_TAX_RECEIVABLE, policy.billingTaxFee(event.installmentIndex())],
 
             [UNASSIGNED_SURPLUS, policy.billingSurplus(event.installmentIndex())],
             [FEE_REVENUE, policy.billingInstallmentFee(event.installmentIndex())]
