@@ -1,14 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Card, Table, Button } from 'react-bootstrap';
 import BillingContainer from './components/BillingContainer';
 import EventsContainer from './components/EventsContainer/EventsContainer';
 import LedgerContainer from './components/LedgerContainer';
 import PolicyContainer from './components/PolicyContainer';
 import GenerateApprovedPaymentEntryUseCase from './polices/application/GenerateApprovedPaymentEntryUseCase';
 import GenerateInceptionEntryUseCase from './polices/application/GenerateInceptionEntryUseCase';
-import GetApprovedPaymentsBeforeInceptionUseCase from './polices/application/GetApprovedPaymentsBeforeInceptionUseCase';
+import GetApprovedPaymentsForInceptionUseCase from './polices/application/GetApprovedPaymentsForInceptionUseCase';
 import Entry from './polices/domain/entry';
+import Ledger from './polices/domain/ledger';
 import Policy from './polices/domain/policy';
 import PolicyEvent, { ApprovedPayment, Inception } from './polices/domain/policy_event';
 
@@ -25,19 +26,20 @@ export type Billing = {
   total: number
 }
 
-let EVENTS: PolicyEvent [];
+let EVENTS: PolicyEvent[];
 
 function App() {
 
   const [policy] = useState<Policy>(Policy.createEmpty());
-  const [billingsData, setBillingData] = useState<Billing []>(billings(policy));
-  const [entries, setEntries] = useState<Entry []>([]);
+  const [billingsData, setBillingData] = useState<Billing[]>(billings(policy));
+  const [entries, setEntries] = useState<Entry[]>([]);
+  const [balances, setBalances] = useState<[string, number] []>([])
 
   function billings(policy: Policy): Billing[] {
     const data: Billing[] = []
     for (let i = 0; i < policy.billingSize(); i++) {
       data.push({
-        index: (i + 1), 
+        index: (i + 1),
         premium: policy.billingPremium(i),
         surplus: policy.billingSurplus(i),
         installmentFee: policy.billingInstallmentFee(i),
@@ -57,20 +59,32 @@ function App() {
     setBillingData(billings(policy))
   }
 
-  const onClickRunButton = (e: PolicyEvent) => {        
+  const onClickRunButton = (e: PolicyEvent) => {
     try {
-      if( e instanceof ApprovedPayment){
-        setEntries([ ...entries, ...(new GenerateApprovedPaymentEntryUseCase()).execute(policy, e) ])
+      if (e instanceof ApprovedPayment) {
+        setEntries([...entries, ...(new GenerateApprovedPaymentEntryUseCase()).execute(policy, e)])
       }
-  
-      if( e instanceof Inception){
-        const ammount = (new GetApprovedPaymentsBeforeInceptionUseCase()).execute(policy, EVENTS)
-        setEntries([ ...entries, ...(new GenerateInceptionEntryUseCase()).execute(policy, e, ammount) ])       
+
+      if (e instanceof Inception) {
+        const amount = (new GetApprovedPaymentsForInceptionUseCase()).execute(policy, EVENTS)
+        setEntries([...entries, ...(new GenerateInceptionEntryUseCase()).execute(policy, e, amount[0], amount[1])])
       }
     } catch (ex) {
       console.error(ex); // pass exception object to err handler
     }
-    
+
+  }
+
+  const generateBalance = () => {
+    const ledger = new Ledger();
+
+    entries.forEach(entry => ledger.addEntry(entry))
+
+    const balancesTemp: [string, number] []  = []
+
+    ledger.accounts.forEach(account => balancesTemp.push([account.name, account.totalBalance()]))
+
+    setBalances(balancesTemp)
   }
 
   return (
@@ -80,7 +94,7 @@ function App() {
           <PolicyContainer policy={policy} onChange={onChangePolicyHandler} />
         </Col>
         <Col>
-          <BillingContainer billings={billingsData} />          
+          <BillingContainer billings={billingsData} />
         </Col>
       </Row>
       <Row className="mt-4">
@@ -88,13 +102,33 @@ function App() {
           <EventsContainer onClickRunButtom={onClickRunButton} onEventsChange={(events) => EVENTS = events} />
         </Col>
         <Col>
-          
+          <Card>
+            <Card.Header>Balance <Button variant="outline-secondary" size="sm" onClick={generateBalance}>Generate</Button></Card.Header>
+            <Card.Body>
+              <Table striped bordered hover responsive size="sm">
+                <thead>
+                  <tr>
+                    <th>Account</th>
+                    <th>Balance</th>
+                  </tr>
+                </thead>
+                {balances.map((item, index) => (
+                  
+                  <tr key={"balances" + index}>
+                    <td>{item[0]}</td>
+                    <td>{item[1]}</td>
+                  </tr>
+                  
+                ))}
+              </Table>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
 
       <Row className="mt-4">
         <Col>
-          <LedgerContainer entries={entries} onClear={() => setEntries([])}/>          
+          <LedgerContainer entries={entries} onClear={() => setEntries([])} />
         </Col>
       </Row>
     </Container>

@@ -10,7 +10,7 @@ const InceptionEventForm = ({onChange} : { onChange: (e: Inception) => void }) =
     })
 
     useEffect(() => {
-        onChange(new Inception(new Date(data.created), new Date(data.effective)))
+        onChange(new Inception(new Date(data.created.replace("-", "/")), new Date(data.effective.replace("-", "/"))))
     }, [data, onChange])
 
     return (

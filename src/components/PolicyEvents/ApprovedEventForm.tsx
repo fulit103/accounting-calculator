@@ -20,12 +20,11 @@ const ApprovedEventForm = ({ onChange }: { onChange: (e: ApprovedPayment) => voi
   })
 
   useEffect(() => {
+    console.log(data.depositedOn, Date.parse(data.depositedOn))
     onChange(new ApprovedPayment(
-      new Date(data.depositedOn), 
-      new Date(data.depositedOn), 
       data.installment,
       data.term,
-      new Date(data.depositedOn),
+      new Date(data.depositedOn.replace("-", "/")),
       data.duplicated,
       data.overpayment
     ))

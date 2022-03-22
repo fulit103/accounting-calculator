@@ -54,8 +54,8 @@ export class ApprovedPayment extends PolicyEvent {
     readonly isDuplicated: boolean;
     readonly overpayment: number;
 
-    constructor(created: Date, effective: Date, installment: number, term: number, depositedOn: Date, isDuplicated: boolean, overpayment: number) {
-        super("ApprovedPayment", created, effective)
+    constructor(installment: number, term: number, depositedOn: Date, isDuplicated: boolean, overpayment: number) {
+        super("ApprovedPayment", depositedOn, depositedOn)
         this.installment = installment;
         this.term = term;
         this.depositedOn = depositedOn;

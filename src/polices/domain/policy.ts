@@ -19,11 +19,18 @@ class Policy {
         this.payment_type = payment_type;
         this.need_inspection = need_inspection;
         this._effectiveDate = _effectiveDate;
+        this._effectiveDate.setHours(0,0,0,0);
         this.billings = this.generatePayment()
     }
 
     static createEmpty() : Policy {
-        return new Policy(1000, new FL(), new PaymentType(1, "card"), false, new Date())
+        return new Policy(
+            1000, 
+            new FL(),
+            new PaymentType(1, "card"), 
+            false, 
+            new Date()
+        )
     }
 
     effectiveDate() : Date{
@@ -45,7 +52,8 @@ class Policy {
 
     setEffectiveDateStr(effectiveDate: string) {
         console.log("value: ", effectiveDate)
-        this._effectiveDate = new Date(effectiveDate);
+        console.log("value: string ", (new Date(effectiveDate).toISOString().split('T')[0]).replace("-", "/")  )
+        this._effectiveDate = new Date((new Date(effectiveDate).toISOString().split('T')[0]).replace("-", "/") );
         this.billings = this.generatePayment()
     }
 

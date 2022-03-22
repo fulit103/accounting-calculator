@@ -38,7 +38,7 @@ class Account {
     }
 
     totalBalance() : number {
-        return this.totalCredits() - this.totalDebits()
+        return this.totalDebits() - this.totalCredits()
     }
 }
 

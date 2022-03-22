@@ -20,15 +20,18 @@ export abstract class Fee {
 }
 
 export class InstallmentFee extends Fee {    
-    constructor(){
+    readonly fee: number;
+
+    constructor(fee: number = 3){
         super(INSTALLMEN_FEE)
+        this.fee = fee;
     }
 
     value(policy: Policy): number {
         if(policy.numberOfPayments()===1)
             return 0
         
-        return policy.numberOfPayments()*3 - 3
+        return policy.numberOfPayments()*this.fee - this.fee
     }
 }
 

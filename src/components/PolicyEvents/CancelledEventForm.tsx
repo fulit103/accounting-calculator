@@ -11,7 +11,7 @@ const CancelledEventForm = ({onChange} : { onChange: (e: Cancelled) => void }) =
     })
 
     useEffect(() => {
-        onChange(new Cancelled(new Date(data.created), new Date(data.effective), data.flat))
+        onChange(new Cancelled(new Date(data.created.replace("-", "/")), new Date(data.effective.replace("-", "/")), data.flat))
     }, [data, onChange])
 
     return (

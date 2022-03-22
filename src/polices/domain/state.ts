@@ -36,7 +36,7 @@ export class CA extends State {
     constructor(){
         super("CA", [
             new AdminFee(),
-            new InstallmentFee(),
+            new InstallmentFee(7),
             new InspectionFee()
             //new SurplusFee()
         ])

@@ -1,4 +1,4 @@
-import Ladger from "../domain/ladger";
+import Ladger from "../domain/ledger";
 import Policy from "../domain/policy";
 
 class LadgerGenerator {
