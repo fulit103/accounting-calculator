@@ -1,5 +1,5 @@
 import Entry from "../domain/entry";
-import { CASH, EMPA_FEE_PAYABLE, FEE_REVENUE, FIGA_FEE_RECEIVABLE, INSPECTION_FEES, PREMIUMS_RECEIVED_IN_ADVANCED, PREMIUM_RECEIVABLE, PROGRAM_ADMINISTRATOR_FEE_REVENUE, REFUNS_PAYABLE, STATE_TAX_RECEIVABLE, UNASSIGNED_SURPLUS } from "../domain/ledger";
+import { CASH, DEFERRED_INSTALLMENTS, EMPA_FEE_PAYABLE, FEE_REVENUE, FIGA_FEE_RECEIVABLE, INSPECTION_FEES, PREMIUMS_RECEIVED_IN_ADVANCED, PREMIUM_RECEIVABLE, PROGRAM_ADMINISTRATOR_FEE_REVENUE, REFUNS_PAYABLE, STATE_TAX_RECEIVABLE, UNASSIGNED_SURPLUS } from "../domain/ledger";
 import Policy from "../domain/policy";
 import { ApprovedPayment } from "../domain/policy_event";
 
@@ -14,6 +14,10 @@ export default class GenerateApprovedPaymentEntryUseCase {
 
         if(event.isOverpayment()) {
             entries.push( this.getOverpaymentEntry(event) )
+        }
+
+        if(event.installment>1){
+            entries.push(this.getPolicyBalancingEntry(policy, event));
         }
 
         return  entries;
@@ -81,6 +85,21 @@ export default class GenerateApprovedPaymentEntryUseCase {
         
         return new Entry(
             "Overpayment", 
+            debits.filter( i => i[1] !== 0),
+            credits.filter( i => i[1] !== 0)
+        )
+    }
+
+    getPolicyBalancingEntry(policy: Policy, event: ApprovedPayment) : Entry{
+        const debits : [string, number] [] = [
+            [PREMIUM_RECEIVABLE, policy.billingPremium(event.installmentIndex())]
+        ]
+        const credits: [string, number] [] = [
+            [DEFERRED_INSTALLMENTS, policy.billingPremium(event.installmentIndex())] 
+        ]
+        
+        return new Entry(
+            "Record Balancing Entry due to Installment Payment",
             debits.filter( i => i[1] !== 0),
             credits.filter( i => i[1] !== 0)
         )

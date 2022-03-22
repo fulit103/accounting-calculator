@@ -84,7 +84,7 @@ export class SurplusFee extends Fee {
 
     value(policy: Policy): number {
         const pre = policy.premium();
-        return pre * 0.1;
+        return Number((pre * 0.1).toFixed(0));
     }
 }
 
@@ -96,7 +96,7 @@ export class FigaFee extends Fee {
     value(policy: Policy): number {    
         console.log("FullYear: ", console.log(policy.effectiveDateYear()))        
         if(policy.effectiveDateYear()===2022)
-            return Number((policy.premium() * 0.007).toFixed(2))
+            return Number((policy.premium() * 0.007).toFixed(0))
 
         return 0
     }
