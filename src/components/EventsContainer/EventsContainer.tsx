@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Badge, Button, Card, Col, ListGroup, Row } from "react-bootstrap";
-import PolicyEvent, { ApprovedPayment, Cancelled, Endorsement, Inception } from "../../polices/domain/policy_event";
+import PolicyEvent, { ApprovedPayment, Cancelled, DailyAccrual, Endorsement, Inception } from "../../polices/domain/policy_event";
 import EventModal from "../PolicyEvents/EventModal";
 
 
@@ -71,6 +71,20 @@ const InceptionListItem = ({ event, onClickRunButtom }: { event: Inception, onCl
   )
 }
 
+const DailyAccrualListItem = ({ event, onClickRunButtom }: { event: DailyAccrual, onClickRunButtom? : (e: PolicyEvent) => void  }) => {
+  return (
+    <ListGroup.Item>
+      <EventItemHeader event={event} onClick={onClickRunButtom}/>
+      <Row>
+        <Col>
+          <strong>Start Date</strong> {event.getStartDateStr()}
+          <strong> End Date</strong> {event.getEndDateStr()}
+        </Col>
+      </Row>
+    </ListGroup.Item>
+  )
+}
+
 const ApprovedPaymentListItem = ({ event, onClickRunButtom }: { event: ApprovedPayment, onClickRunButtom? : (e: PolicyEvent) => void  }) => {
   return (
     <ListGroup.Item>
@@ -112,6 +126,12 @@ class FactoryItemListEvent {
     if ( e instanceof ApprovedPayment ) {
       return (
         <ApprovedPaymentListItem event={e} onClickRunButtom={onClickRunButtom}/>
+      )
+    }
+
+    if ( e instanceof DailyAccrual ) {
+      return (
+        <DailyAccrualListItem event={e} onClickRunButtom={onClickRunButtom}/>
       )
     }
   }

@@ -18,7 +18,7 @@ class PolicyEvent {
     }
 
     getDaysBetween() : number {
-        return Math.ceil((this.created.getTime() - this.effective.getTime()) / (1000 * 3600 * 24));
+        return Math.ceil(( this.effective.getTime() - this.created.getTime()) / (1000 * 3600 * 24));
     }
 } 
 
@@ -69,6 +69,27 @@ export class ApprovedPayment extends PolicyEvent {
 
     installmentIndex() : number {
         return this.installment - 1;
+    }
+}
+
+export class DailyAccrual extends PolicyEvent {
+    readonly startDate: Date;
+    readonly endDate: Date;
+
+    constructor(startDate: Date, endDate: Date ) {
+        super("Daily Accrual", startDate, endDate)
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.startDate.setHours(0,0,0,0);
+        this.endDate.setHours(0,0,0,0)
+    }
+
+    getStartDateStr() : string {
+        return this.startDate.toISOString().split('T')[0]
+    }
+
+    getEndDateStr() : string {
+        return this.endDate.toISOString().split('T')[0]
     }
 }
 

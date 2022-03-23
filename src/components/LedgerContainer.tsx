@@ -20,7 +20,7 @@ const LedgerContainer = ({entries, onClear} : {entries: Entry [], onClear: () =>
                         {entries.map((item, index) => (
                             <>
                                 <tr key={"entries" + index}>
-                                    <td colSpan={5}>{item.name}</td>
+                                    <td colSpan={5}><strong>{item.name}</strong></td>
                                 </tr>
                                 {item.debits.map((debits, indexDebits) => (
                                     <tr key={"debits" + indexDebits}>                                    

@@ -5,6 +5,7 @@ import EndorsementEventForm from "./EndorsementEventForm";
 import ApprovedEventForm from "./ApprovedEventForm";
 import CancelledEventForm from "./CancelledEventForm";
 import InceptionEventForm from "./InceptionEventForm";
+import DailyAccrualEventForm from "./DailyAccrualEventForm";
 
 class EventFormFactory {
     static build(name: string, onChange : (e: PolicyEvent) => void) {
@@ -24,6 +25,10 @@ class EventFormFactory {
             case 'inception':
                 return (
                     <InceptionEventForm onChange={onChange}/>
+                )
+            case 'daily_accrual':
+                return (
+                    <DailyAccrualEventForm onChange={onChange} />
                 )
         }
     }
@@ -59,6 +64,7 @@ const EventModal = ({ show, handleClose, onSaveEvent }: {
                         <option value="expiration">Expiration</option>
                         <option value="reinstatement">Reinstatemen</option>
                         <option value="approve_payment">Approve Payment</option>
+                        <option value="daily_accrual">Daily Accrual</option>
                     </Form.Select>
                 </Form.Group>
 

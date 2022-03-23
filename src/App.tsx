@@ -6,12 +6,13 @@ import EventsContainer from './components/EventsContainer/EventsContainer';
 import LedgerContainer from './components/LedgerContainer';
 import PolicyContainer from './components/PolicyContainer';
 import GenerateApprovedPaymentEntryUseCase from './polices/application/GenerateApprovedPaymentEntryUseCase';
+import GenerateDailyEarnedAccrualUseCase from './polices/application/GenerateDailyEarnedAccrualUseCase';
 import GenerateInceptionEntryUseCase from './polices/application/GenerateInceptionEntryUseCase';
 import GetApprovedPaymentsForInceptionUseCase from './polices/application/GetApprovedPaymentsForInceptionUseCase';
 import Entry from './polices/domain/entry';
 import Ledger from './polices/domain/ledger';
 import Policy from './polices/domain/policy';
-import PolicyEvent, { ApprovedPayment, Inception } from './polices/domain/policy_event';
+import PolicyEvent, { ApprovedPayment, DailyAccrual, Inception } from './polices/domain/policy_event';
 
 export type Billing = {
   index: number,
@@ -69,6 +70,10 @@ function App() {
         const amount = (new GetApprovedPaymentsForInceptionUseCase()).execute(policy, EVENTS)
         setEntries([...entries, ...(new GenerateInceptionEntryUseCase()).execute(policy, e, amount[0], amount[1])])
       }
+
+      if (e instanceof DailyAccrual) {
+        setEntries([...entries, (new GenerateDailyEarnedAccrualUseCase()).execute(policy, e)])
+      }
     } catch (ex) {
       console.error(ex); // pass exception object to err handler
     }
@@ -116,7 +121,7 @@ function App() {
                   
                   <tr key={"balances" + index}>
                     <td>{item[0]}</td>
-                    <td>{item[1]}</td>
+                    <td>{item[1]===0 ? <div style={{color: 'gray'}}>0</div> : <strong>{item[1].toFixed(2)}</strong>}</td>
                   </tr>
                   
                 ))}
