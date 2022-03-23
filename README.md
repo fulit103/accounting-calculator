@@ -9,7 +9,10 @@ This project is for create a general accounting calculator and lerning, tha drea
   - Reinstatement
 * Generate Gherkin files.
 
-<img width="1375" alt="image" src="https://user-images.githubusercontent.com/3542527/159010020-25689da8-6bda-4582-b50e-3b23d8901392.png">
+<img width="1326" alt="image" src="https://user-images.githubusercontent.com/3542527/159628695-afe1d0b0-1540-4278-a8eb-73c6b6f2c683.png">
+
+<img width="1317" alt="image" src="https://user-images.githubusercontent.com/3542527/159628730-a5c30e93-d156-4dc2-96ab-2c6694ea4d53.png">
+
 
 ## Available Scripts
 
