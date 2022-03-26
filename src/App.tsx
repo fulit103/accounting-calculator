@@ -63,12 +63,16 @@ function App() {
   const onClickRunButton = (e: PolicyEvent) => {
     try {
       if (e instanceof ApprovedPayment) {
-        setEntries([...entries, ...(new GenerateApprovedPaymentEntryUseCase()).execute(policy, e)])
+        const newEntries = (new GenerateApprovedPaymentEntryUseCase()).execute(policy, e)
+
+        setEntries([...entries, ...newEntries])
       }
 
       if (e instanceof Inception) {
         const amount = (new GetApprovedPaymentsForInceptionUseCase()).execute(policy, EVENTS)
-        setEntries([...entries, ...(new GenerateInceptionEntryUseCase()).execute(policy, e, amount[0], amount[1])])
+        const newEntries = (new GenerateInceptionEntryUseCase()).execute(policy, e, amount[0], amount[1])
+        
+        setEntries([...entries, ...newEntries])
       }
 
       if (e instanceof DailyAccrual) {
@@ -87,7 +91,14 @@ function App() {
 
     const balancesTemp: [string, number] []  = []
 
-    ledger.accounts.forEach(account => balancesTemp.push([account.name, account.totalBalance()]))
+    console.log("######### ledger #############")
+
+    ledger.accounts.forEach(account => {
+      balancesTemp.push([account.name, account.totalBalance()])
+      console.log(`|${account.name}|${account.totalBalance()}|`)
+    })
+
+    console.log("######### ###### #############")
 
     setBalances(balancesTemp)
   }

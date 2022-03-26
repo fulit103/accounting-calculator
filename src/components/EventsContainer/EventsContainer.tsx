@@ -49,8 +49,18 @@ const EndorsementListItem = ({ event, onClickRunButtom }: { event: Endorsement, 
       <Row>
         <Col>
           <strong>Created</strong> {event.getCreatedStr()}
-          <strong> Effective Date</strong> {event.getEffectiveStr()}
-          <strong> Premium</strong> {event.premium}
+          <strong> Effective Date</strong> {event.getEffectiveStr()}          
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <strong> Previus Premium</strong> {event.premium}
+          <strong> New Premium</strong> {event.surplus}
+        </Col>
+      </Row>
+      <Row>
+        <Col>          
+          <strong> New Policy effective date</strong> {event.newPolicyEffectiveDateStr()}
         </Col>
       </Row>
     </ListGroup.Item>

@@ -1,3 +1,5 @@
+import { SurplusFee } from "./fee";
+
 class PolicyEvent {
     readonly type: string;
     readonly created: Date;
@@ -40,11 +42,28 @@ export class Cancelled extends PolicyEvent {
 
 export class Endorsement extends PolicyEvent {
     readonly premium: number;
+    readonly surplus: number;
+    readonly newPolicyEffectiveDate: Date | undefined;
 
-    constructor(created: Date, effective: Date, premium: number) {
+    constructor(
+        created: Date, 
+        effective: Date,
+        newPolicyEffectiveDate: Date | undefined,         
+        premium: number,
+        surplus: number) {
         super("Endorsement", created, effective)
+        this.newPolicyEffectiveDate = newPolicyEffectiveDate;
         this.premium = premium;
+        this.surplus = surplus;        
     }
+
+    newPolicyEffectiveDateStr() : string {
+        if( this.newPolicyEffectiveDate === undefined)
+            return "-"
+
+        return this.newPolicyEffectiveDate.toISOString().split('T')[0]
+    }
+
 }
 
 export class ApprovedPayment extends PolicyEvent {

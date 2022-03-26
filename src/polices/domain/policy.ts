@@ -37,6 +37,14 @@ class Policy {
         return this._effectiveDate
     }
 
+    endDate(term: number = 0) : Date {
+        const year  = this._effectiveDate.getFullYear();
+        const month = this._effectiveDate.getMonth();
+        const day   = this._effectiveDate.getDate();
+        const date  = new Date(year + 1, month, day);
+        return date;
+    }
+
     effectiveDateYear() : number {        
         return this._effectiveDate.getFullYear()
     }
