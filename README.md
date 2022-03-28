@@ -1,4 +1,4 @@
-This project is for create a general accounting calculator and lerning, tha dream in the long term is add more features like
+This project is for create a general accounting calculator and lerning tool, tha dream in the long term is add more features like
 
 - Add TimeLine policy visualizations
 - Add Use Cases for following events
