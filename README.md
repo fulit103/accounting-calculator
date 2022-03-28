@@ -11,6 +11,8 @@ This project is for create a general accounting calculator and lerning, tha drea
 
 <img width="1326" alt="image" src="https://user-images.githubusercontent.com/3542527/159628695-afe1d0b0-1540-4278-a8eb-73c6b6f2c683.png">
 
+<img width="1343" alt="image" src="https://user-images.githubusercontent.com/3542527/160330163-c9c78346-6266-4959-86a9-9630fafcc082.png">
+
 <img width="1317" alt="image" src="https://user-images.githubusercontent.com/3542527/159628730-a5c30e93-d156-4dc2-96ab-2c6694ea4d53.png">
 
 
