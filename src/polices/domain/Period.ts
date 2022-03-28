@@ -11,7 +11,7 @@ export default class Period {
         this.startDate = startDate;
         this.endDate = endDate;
         this.event = event;
-        this.next = undefined;
+        this.next = undefined;        
     }
 
     insert(premium: number, startDate: Date, endDate: Date, event: string){

@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Container, Row, Col, Card, Table, Button } from 'react-bootstrap';
 import BillingContainer from './components/BillingContainer';
 import EventsContainer from './components/EventsContainer/EventsContainer';
@@ -13,6 +13,8 @@ import Entry from './polices/domain/entry';
 import Ledger from './polices/domain/ledger';
 import Policy from './polices/domain/policy';
 import PolicyEvent, { ApprovedPayment, DailyAccrual, Inception } from './polices/domain/policy_event';
+import Timeline from 'react-vis-timeline'
+import GenerateEffectivePeriods from './polices/application/GenerateEffectivePeriodsUseCase';
 
 export type Billing = {
   index: number,
@@ -29,12 +31,35 @@ export type Billing = {
 
 let EVENTS: PolicyEvent[];
 
+const items = [
+  {id: 1, content: 'item 1', start: new Date()},
+    {id: 2, content: 'item 2', start: new Date('2022-04-14')},
+]
+
+const options = {
+  initialGroups: [
+    {id: 1, content: 'Periods'},
+    {id: 2, content: 'Events'}
+  ],
+	initialItems: [
+    //{id: 1, content: 'item 1', group: 1, start: new Date()}
+  ],
+	options: {
+		height: '250px',
+		autoResize: true,
+		stack: true, // false == overlap items
+		//orientation: 'top',
+		verticalScroll: true
+	}
+}
+
 function App() {
 
   const [policy] = useState<Policy>(Policy.createEmpty());
   const [billingsData, setBillingData] = useState<Billing[]>(billings(policy));
   const [entries, setEntries] = useState<Entry[]>([]);
   const [balances, setBalances] = useState<[string, number] []>([])
+  const timeline = useRef<Timeline>(null);
 
   function billings(policy: Policy): Billing[] {
     const data: Billing[] = []
@@ -103,6 +128,42 @@ function App() {
     setBalances(balancesTemp)
   }
 
+  const generateTimeline = () => {
+    //timeline.current.timeline.fit()
+    //timeline.current.items.add({id: 1, content: 'item 1', group: 1, start: new Date()})
+    if (null !== timeline.current) {
+      timeline?.current.items.clear();
+
+      const periods : {
+        premium: number, 
+        startDate: Date, 
+        endDate: Date} [] = (new GenerateEffectivePeriods()).execute(policy, EVENTS);
+      
+      periods.forEach((item, index) => {
+        if (null !== timeline.current) {
+          timeline.current.items.add({
+            id: index+1,
+            group: 1,
+            content: `${item.premium}`,
+            start: item.startDate,
+            end: item.endDate
+          })   
+        }         
+      })
+
+      EVENTS.forEach((item, index) => {
+        if (null !== timeline.current) {
+          timeline.current.items.add({
+            id: index+1+periods.length,
+            group: 2,
+            content: `${item.type}`,
+            start: item.effective,
+          })   
+        }
+      })
+    }    
+  }
+
   return (
     <Container>
       <Row className="mt-4">
@@ -144,9 +205,21 @@ function App() {
 
       <Row className="mt-4">
         <Col>
+          <Button className="mb-4" variant="outline-primary" size="sm" onClick={generateTimeline}>Generate</Button>  
+          <Timeline
+            ref={timeline}
+            {...options}            
+          />
+        </Col>
+      </Row>
+
+      <Row className="mt-4">
+        <Col>
           <LedgerContainer entries={entries} onClear={() => setEntries([])} />
         </Col>
       </Row>
+
+      
     </Container>
   );
 }
