@@ -9,6 +9,7 @@ export default class GenerateInceptionEntryUseCase {
         const entries: Entry [] = [this.getInceptionEntry(policy)]        
         const catchUpEntry = this.getCatchUpEntries(policy, event);
         const preEffectiveEntry = this.getEntryForInceptionWithPreEffectivePayment(policy, event, approvedPaymentsAmountBeforeInception, approvedPaymentsAmountAfterInception);        
+        const nonpaymentEntryForMultyPay = this.getNonpaymentEntryForMultyPay(policy, event, approvedPaymentsAmountBeforeInception + approvedPaymentsAmountAfterInception)
         
         if(preEffectiveEntry!==undefined) {
             entries.push(preEffectiveEntry);
@@ -18,7 +19,28 @@ export default class GenerateInceptionEntryUseCase {
             entries.push(catchUpEntry)
         }
 
+        if(nonpaymentEntryForMultyPay!==undefined){
+            entries.push(nonpaymentEntryForMultyPay)
+        }
+
         return entries;
+    }
+
+    getNonpaymentEntryForMultyPay(policy: Policy, event: Inception, paymentAmmount: number) : Entry | undefined{
+        if(paymentAmmount > 0 || !policy.isMultipay() ){
+            return undefined
+        }
+        
+        return new Entry(
+            "Record Policy Inception Nonpayment for Effective",
+            [
+                [PREMIUM_RECEIVABLE, policy.billingPremium(0)],
+                [DEFERRED_INSTALLMENTS, policy.premium() - policy.billingPremium(0)]
+            ],
+            [
+                [PREMIUM_RECEIVABLE, policy.premium()]
+            ]
+        )        
     }
 
     private getInceptionEntry(policy: Policy) : Entry {

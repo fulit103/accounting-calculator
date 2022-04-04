@@ -5,6 +5,7 @@ import { FactoryState, FL, LA, State } from "./state";
 
 // Aggregate Root
 class Policy {
+    
     private _premium: number;
     private state: State;
     private payment_type: PaymentType;    
@@ -113,6 +114,10 @@ class Policy {
 
     numberOfPayments(): number {
         return this.payment_type.numberOfPayments();
+    }
+
+    isMultipay(): boolean {
+        return this.payment_type.numberOfPayments()>1;
     }
 
     setNumberOfPayments(numberOfPayments: number) : void {

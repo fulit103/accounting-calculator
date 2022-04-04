@@ -1,4 +1,4 @@
-import { SurplusFee } from "./fee";
+import DaysBetween from "./DaysBetween";
 
 class PolicyEvent {
     readonly type: string;
@@ -9,6 +9,8 @@ class PolicyEvent {
         this.type = type;
         this.created = created;
         this.effective = effective;
+        this.created.setHours(0,0,0,0)
+        this.effective.setHours(0,0,0,0)
     }
 
     getCreatedStr() : string {
@@ -20,7 +22,7 @@ class PolicyEvent {
     }
 
     getDaysBetween() : number {
-        return Math.ceil(( this.effective.getTime() - this.created.getTime()) / (1000 * 3600 * 24));
+        return DaysBetween.get(this.effective, this.created);
     }
 } 
 
@@ -52,7 +54,8 @@ export class Endorsement extends PolicyEvent {
         premium: number,
         surplus: number) {
         super("Endorsement", created, effective)
-        this.newPolicyEffectiveDate = newPolicyEffectiveDate;
+        this.newPolicyEffectiveDate = newPolicyEffectiveDate;        
+        this.newPolicyEffectiveDate?.setHours(0,0,0,0);
         this.premium = premium;
         this.surplus = surplus;        
     }
@@ -78,6 +81,7 @@ export class ApprovedPayment extends PolicyEvent {
         this.installment = installment;
         this.term = term;
         this.depositedOn = depositedOn;
+        this.depositedOn.setHours(0,0,0,0);
         this.isDuplicated = isDuplicated;
         this.overpayment = overpayment;
     }
@@ -90,6 +94,24 @@ export class ApprovedPayment extends PolicyEvent {
         return this.installment - 1;
     }
 }
+
+export class WriteOffApproved extends PolicyEvent {
+    readonly term: number;
+    readonly premium: number;
+    readonly stateTax: number;
+    readonly figaFee: number;
+    readonly approvedOn: Date;
+
+    constructor(term: number, premium: number, stateTax: number, figaFee: number, approvedOn: Date) {
+        super("WriteOffApproved", approvedOn, approvedOn);
+        this.term = term;
+        this.premium = premium;
+        this.stateTax = stateTax;
+        this.figaFee = figaFee;
+        this.approvedOn = approvedOn;
+        this.approvedOn.setHours(0,0,0,0)
+    }
+} 
 
 export class DailyAccrual extends PolicyEvent {
     readonly startDate: Date;

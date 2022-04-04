@@ -80,8 +80,10 @@ export default class GenerateApprovedPaymentEntryUseCase {
             [CASH, event.overpayment],
         ]
         const credits: [string, number] [] = [
-            [REFUNS_PAYABLE, event.overpayment ]
+            [event.overpayment>5 ? REFUNS_PAYABLE : FEE_REVENUE, event.overpayment ]
         ] // account_to_credit_the_overpayment ????? refund payable || fee_revenue
+
+
         
         return new Entry(
             "Overpayment", 

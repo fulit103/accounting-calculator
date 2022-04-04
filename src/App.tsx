@@ -12,9 +12,11 @@ import GetApprovedPaymentsForInceptionUseCase from './polices/application/GetApp
 import Entry from './polices/domain/entry';
 import Ledger from './polices/domain/ledger';
 import Policy from './polices/domain/policy';
-import PolicyEvent, { ApprovedPayment, DailyAccrual, Inception } from './polices/domain/policy_event';
+import PolicyEvent, { ApprovedPayment, Cancelled, DailyAccrual, Inception } from './polices/domain/policy_event';
 import Timeline from 'react-vis-timeline'
 import GenerateEffectivePeriods from './polices/application/GenerateEffectivePeriodsUseCase';
+import GenerateCancelEntryUseCase from './polices/application/GenerateCancelEntryUseCase';
+import GetApprovedPaymentsUseCase from './polices/application/GetApprovedPaymentsUseCase';
 
 export type Billing = {
   index: number,
@@ -102,6 +104,11 @@ function App() {
 
       if (e instanceof DailyAccrual) {
         setEntries([...entries, (new GenerateDailyEarnedAccrualUseCase()).execute(policy, e)])
+      }
+
+      if (e instanceof Cancelled) {
+        const amount = (new GetApprovedPaymentsUseCase()).execute(policy, EVENTS)
+        setEntries([...entries, ...(new GenerateCancelEntryUseCase()).execute(policy, e,  amount[0], amount[1])])
       }
     } catch (ex) {
       console.error(ex); // pass exception object to err handler
@@ -193,7 +200,7 @@ function App() {
                   
                   <tr key={"balances" + index}>
                     <td>{item[0]}</td>
-                    <td>{item[1]===0 ? <div style={{color: 'gray'}}>0</div> : <strong>{item[1].toFixed(2)}</strong>}</td>
+                    <td>{item[1]===0 || item[1].toFixed(2)==="0.00" || item[1].toFixed(2)==="-0.00"? <div style={{color: 'gray'}}>0</div> : <strong>{item[1].toFixed(2)}</strong>}</td>
                   </tr>
                   
                 ))}

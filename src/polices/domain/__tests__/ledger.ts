@@ -18,9 +18,9 @@ it('test add Entry on leadger', () => {
 
     ledger.addEntry(entry);
 
-    expect(ledger.accounts[0].totalBalance()).toEqual(-10);  
-    expect(ledger.accounts[1].totalBalance()).toEqual(-15);  
-    expect(ledger.accounts[3].totalBalance()).toEqual(-20);
+    expect(ledger.accounts[0].totalBalance()).toEqual(10);  
+    expect(ledger.accounts[1].totalBalance()).toEqual(15);  
+    expect(ledger.accounts[3].totalBalance()).toEqual(20);
     
-    expect(ledger.accounts[11].totalBalance()).toEqual(45);
+    expect(ledger.accounts[11].totalBalance()).toEqual(-45);
 });

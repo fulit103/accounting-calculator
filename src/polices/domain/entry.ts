@@ -7,9 +7,9 @@ class Entry {
     constructor(name: string, debits:  [string, number][], credits: [string, number][]){        
         this.guardName(name);
         this.name = name;
-        //this.guardAmmount(debits, credits);        
-        this.debits = debits;
-        this.credits = credits;
+        //this.guardAmmount(debits, credits);     
+        this.debits = debits.filter( i => i[1] !== 0);
+        this.credits = credits.filter( i => i[1] !== 0);
     }
 
     guardName(name : string){
