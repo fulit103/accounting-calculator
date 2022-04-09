@@ -17,7 +17,7 @@ export const INSPECTION_FEES = "Inspection fees";
 export const PROGRAM_ADMINISTRATOR_FEE_REVENUE = "Program administrator fee revenue";
 export const UNASSIGNED_SURPLUS = "Unassigned surplus";
 export const FEE_REVENUE = "Fee revenue";
-export const REFUNS_PAYABLE = "Refuns payable";
+export const REFUNS_PAYABLE = "Refunds payable";
 
 export const PREMIUMS_RECEIVED_IN_ADVANCED = "Premiums Received In Advanced";
 export const DEFERRED_INSTALLMENTS = "Deferred Installments";

@@ -16,7 +16,7 @@ export abstract class Fee {
         this.name = name
     }
 
-    abstract value(policy: Policy) : number;
+    abstract value(policy: any) : number;
 }
 
 export class InstallmentFee extends Fee {    
@@ -26,7 +26,7 @@ export class InstallmentFee extends Fee {
         super(INSTALLMEN_FEE)
         this.fee = fee;
     }
-
+    
     value(policy: Policy): number {
         if(policy.numberOfPayments()===1)
             return 0
@@ -82,9 +82,19 @@ export class SurplusFee extends Fee {
         super(SURPLUS_FEE)
     }
 
-    value(policy: Policy): number {
-        const pre = policy.premium();
-        return Number((pre * 0.1).toFixed(0));
+    value(policy: number): number;
+    value(policy: Policy): number
+    value(policy: any): number {
+        if(policy instanceof Policy ){
+            const pre = policy.premium();
+            return Number((pre * 0.1).toFixed(0));
+        } else {
+            return Number((policy * 0.1).toFixed(0)); 
+        }
+    }
+
+    static getSurplusFromValue(premium: number) : number {
+        return Number((premium * 0.1).toFixed(0));
     }
 }
 

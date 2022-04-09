@@ -10,13 +10,19 @@ export abstract class State {
         this.fees = fees;
     }
 
-    feeValue(name: string, policy: Policy) : number {
+    feeValue(name: string, policy: number) : number;
+    feeValue(name: string, policy: Policy) : number;
+    feeValue(name: string, policy: any) : number {
         const filtered_fees: Fee[] = this.fees.filter((fee: Fee) => fee.name === name )
-        
+            
         if(filtered_fees.length===0)
             return 0
-        
-        return filtered_fees[0].value(policy)
+
+        if(policy instanceof Policy) {                        
+            return filtered_fees[0].value(policy)
+        } else {
+            return filtered_fees[0].value(policy)
+        }
     }    
 }
 

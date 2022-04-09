@@ -84,7 +84,10 @@ class Policy {
         this.billings = this.generatePayment()
     }
 
-    surplus() : number{        
+    surplus(value?: number) : number {
+        if(value) {
+            return this.state.feeValue(SURPLUS_FEE, value); 
+        }        
         return this.state.feeValue(SURPLUS_FEE, this);
     }   
     
