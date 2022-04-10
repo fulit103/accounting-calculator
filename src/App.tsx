@@ -17,6 +17,7 @@ import Timeline from 'react-vis-timeline'
 import GenerateEffectivePeriods from './polices/application/GenerateEffectivePeriodsUseCase';
 import GenerateCancelEntryUseCase from './polices/application/GenerateCancelEntryUseCase';
 import GetApprovedPaymentsUseCase from './polices/application/GetApprovedPaymentsUseCase';
+import ErrorBoundary from './components/ErrorBoundary';
 
 export type Billing = {
   index: number,
@@ -175,7 +176,9 @@ function App() {
     <Container>
       <Row className="mt-4">
         <Col>
-          <PolicyContainer policy={policy} onChange={onChangePolicyHandler} />
+          <ErrorBoundary key={2233}>
+            <PolicyContainer policy={policy} onChange={onChangePolicyHandler} />
+          </ErrorBoundary>
         </Col>
         <Col>
           <BillingContainer billings={billingsData} />

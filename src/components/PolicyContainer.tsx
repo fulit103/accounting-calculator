@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import Policy from '../polices/domain/policy';
+import ErrorBoundary from './ErrorBoundary';
 
 type PolicyProps = {
     policy: Policy,
@@ -42,9 +43,13 @@ const PolicyContainer = ({policy, onChange}: PolicyProps) => {
 
     function onEffectiveDateChange(_e : React.ChangeEvent<HTMLInputElement>){
         _e.preventDefault()
-        policy.setEffectiveDateStr(_e.target.value)
-        setData({ ...data, effectiveDate: _e.target.value})  
-        onChange(policy)
+        try{
+            policy.setEffectiveDateStr(_e.target.value)
+            setData({ ...data, effectiveDate: _e.target.value})  
+            onChange(policy)
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     function onPaynmentSchedulleChanged(_e : React.ChangeEvent<HTMLSelectElement>) {
@@ -65,7 +70,7 @@ const PolicyContainer = ({policy, onChange}: PolicyProps) => {
         onChange(policy)
     }
 
-    return (
+    return (        
         <Container>
             <Row>   
                 <Col>
@@ -130,9 +135,8 @@ const PolicyContainer = ({policy, onChange}: PolicyProps) => {
                         />
                     </Container>     
                 </Col>  
-            </Row>
-        
-        </Container>
+            </Row>        
+        </Container>        
     );
 }
 

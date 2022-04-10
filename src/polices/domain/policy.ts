@@ -1,3 +1,4 @@
+import { isConstructorDeclaration } from "typescript";
 import { Billing, Payment } from "./billing";
 import { ADMIN_FEE, EMPA_FEE, FIGA_FEE, INSPECTION_FEE, INSTALLMEN_FEE, SURPLUS_FEE, TAX_FEE } from "./fee";
 import PaymentType from "./payment_type";
@@ -50,8 +51,13 @@ class Policy {
         return this._effectiveDate.getFullYear()
     }
 
-    effectiveDateStr() : string{
-        return this._effectiveDate.toISOString().split('T')[0]
+    effectiveDateStr() : string{    
+        try {    
+            return this._effectiveDate.toISOString().split('T')[0]
+        } catch (error) {
+            let date = new Date()            
+            return date.toISOString().split('T')[0];
+        }
     }
 
     setEffectiveDate(effectiveDate: Date) {
@@ -61,9 +67,15 @@ class Policy {
 
     setEffectiveDateStr(effectiveDate: string) {
         console.log("value: ", effectiveDate)
-        console.log("value: string ", (new Date(effectiveDate).toISOString().split('T')[0]).replace("-", "/")  )
-        this._effectiveDate = new Date((new Date(effectiveDate).toISOString().split('T')[0]).replace("-", "/") );
-        this.billings = this.generatePayment()
+        // console.log("value: string ", (new Date(effectiveDate).toISOString().split('T')[0]).replace("-", "/")  )
+        try {
+            let date = new Date(effectiveDate)
+            date.setHours(0,0,0,0)
+            this._effectiveDate = date; // new Date((new Date(effectiveDate).toISOString().split('T')[0]).replace("-", "/") );
+            //this.billings = this.generatePayment()
+        } catch (e: any) {
+            console.log(e)
+        }
     }
 
     premium(): number {
