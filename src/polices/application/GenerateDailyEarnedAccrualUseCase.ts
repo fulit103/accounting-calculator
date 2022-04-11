@@ -6,8 +6,8 @@ import { DailyAccrual } from "../domain/policy_event";
 export default class GenerateDailyEarnedAccrualUseCase {
 
     execute(policy: Policy, event: DailyAccrual) : Entry {
-        const earnedSurplus: number = (policy.surplus()/365) * event.getDaysBetween();
-        const earnedPremium: number = (policy.premium()/365) * event.getDaysBetween();
+        const earnedSurplus: number = (policy.surplus()/365) * (event.getDaysBetween());
+        const earnedPremium: number = (policy.premium()/365) * (event.getDaysBetween());
 
         const debits : [string, number] [] = [
             [UNEARNED_SURPLUS, earnedSurplus],

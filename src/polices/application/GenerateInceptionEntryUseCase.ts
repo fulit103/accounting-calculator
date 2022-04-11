@@ -68,7 +68,7 @@ export default class GenerateInceptionEntryUseCase {
 
     private getCatchUpEntries(policy: Policy, event: Inception) : Entry | undefined {
         if(event.effective >= event.created)
-            return undefined;            
+            return undefined;          
 
         const debits : [string, number] [] = [
             [UNEARNED_PREMIUM_RESERVE, policy.premium() / 356 * event.getDaysBetween() ],
@@ -81,7 +81,7 @@ export default class GenerateInceptionEntryUseCase {
         ]
 
         return new Entry(
-            "Record catch up for premium and surplus",
+            `Record catch up for premium and surplus, days: ${event.getDaysBetween()}`,
             debits, 
             credits
         )

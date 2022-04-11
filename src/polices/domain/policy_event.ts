@@ -22,7 +22,7 @@ class PolicyEvent {
     }
 
     getDaysBetween() : number {
-        return DaysBetween.get(this.effective, this.created);
+        return Math.abs(DaysBetween.get(this.effective, this.created)) - 1;
     }
 } 
 
