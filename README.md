@@ -7,7 +7,6 @@ This project is for create a general accounting calculator and lerning tool, tha
   - Renewals
   - Expiration
   - Reinstatement
-* Generate Gherkin files.
 
 <img width="1326" alt="image" src="https://user-images.githubusercontent.com/3542527/159628695-afe1d0b0-1540-4278-a8eb-73c6b6f2c683.png">
 
